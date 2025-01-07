@@ -122,8 +122,9 @@ func (qbe *QuaiBackend) OnNewBroadcast(sourcePeer p2p.PeerID, Id string, topic s
 			return false
 		}
 
-		backend.Logger().WithFields(log.Fields{"message id": Id, "Number": data.WorkObject.NumberArray(), "Hash": data.WorkObject.Hash()}).Info("Received a work object header view broadcast")
-
+		//backend.Logger().WithFields(log.Fields{"message id": Id, "Number": data.WorkObject.NumberArray(), "Hash": data.WorkObject.Hash()}).Info("Received a work object header view broadcast")
+		backend.Logger().WithFields(log.Fields{"message id": Id, "Number": data.WorkObject.NumberArray(), "Hash": data.WorkObject.Hash(), "mixhash": data.WorkObject.MixHash()}).Info("Received a work object header view broadcast")
+		
 		// Only append this in the case of the slice
 		if !backend.ProcessingState() && backend.NodeCtx() == common.ZONE_CTX {
 			backend.WriteBlock(data.WorkObject)
@@ -138,7 +139,8 @@ func (qbe *QuaiBackend) OnNewBroadcast(sourcePeer p2p.PeerID, Id string, topic s
 		}
 		if backend.ProcessingState() {
 
-			backend.Logger().WithFields(log.Fields{"tx count": len(data.WorkObject.Transactions()), "message id": Id}).Info("Received a work share broadcast")
+			//backend.Logger().WithFields(log.Fields{"tx count": len(data.WorkObject.Transactions()), "message id": Id}).Info("Received a work share broadcast")
+			backend.Logger().WithFields(log.Fields{"tx count": len(data.WorkObject.Transactions()), "mixhash": data.WorkObject.MixHash()}).Info("Received a work share broadcast")
 			// Unpack the workobjectheader and the transactions
 			backend.SendWorkShare(data.WorkObject.WorkObjectHeader())
 			backend.SendRemoteTxs(data.WorkObject.Transactions())
